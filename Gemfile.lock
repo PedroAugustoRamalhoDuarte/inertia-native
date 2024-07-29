@@ -104,6 +104,11 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
+    inertia_rails (3.2.0)
+      railties (>= 5)
+    inertia_rails-contrib (0.1.1)
+      inertia_rails
+      railties (>= 6.0.0)
     io-console (0.7.2)
     irb (1.14.0)
       rdoc (>= 4.0.0)
@@ -311,6 +316,7 @@ DEPENDENCIES
   brakeman
   capybara
   debug
+  inertia_rails-contrib (~> 0.1.1)
   jbuilder
   puma (>= 5.0)
   rails (~> 7.2.0.beta3)

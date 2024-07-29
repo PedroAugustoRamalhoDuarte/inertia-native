@@ -14,7 +14,11 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application" %>
+    <%= vite_react_refresh_tag %>
     <%= vite_client_tag %>
+    <%= vite_javascript_tag 'inertia' %>
+
+    <%= inertia_headers %>
     <%= vite_javascript_tag 'application' %>
     <!--
       If using a TypeScript entrypoint file:
