@@ -24,7 +24,8 @@
     "react-native-screens": "3.31.1",
     "react-native-turbo": "^1.0.0",
     "react-native-web": "^0.19.12",
-    "react-native-web-screen": "^1.0.0"
+    "react-native-web-screen": "^1.0.0",
+    "react-native-webview": "13.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

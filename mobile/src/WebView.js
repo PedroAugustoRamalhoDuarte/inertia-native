@@ -1,32 +1,28 @@
-import { NavigationProp } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import {
-  LoadEvent,
   VisitableView,
-  VisitProposal,
-  VisitableViewProps,
 } from 'react-native-turbo';
-import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
+import {useCurrentUrl, useWebviewNavigate} from 'react-native-web-screen';
 
-import { useSessionHandle } from './useSessionHandle';
-import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
+import {useSessionHandle} from './useSessionHandle';
+import {baseURL, linkingConfig} from './webScreen';
 
-console.log("Teste");
-
-const WebView = ({ navigation, ...props }) => {
-  console.log("WebView");
-  const { navigateTo } = useWebviewNavigate();
+const WebView = ({navigation, ...props}) => {
+  const {navigateTo} = useWebviewNavigate();
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
-  console.log(currentUrl);
   const sessionHandle = useSessionHandle();
 
   const onVisitProposal = useCallback(
-    ({ action: actionType, url }) => navigateTo(url, actionType),
+    ({action: actionType, url}) => {
+      return navigateTo(url, actionType)
+    },
     [navigation]
   );
 
   const onLoad = useCallback(
-    ({ title }) => navigation.setOptions({ title }),
+    ({title}) => {
+      return navigation.setOptions({title})
+    },
     [navigation]
   );
 

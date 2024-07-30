@@ -4,11 +4,11 @@ import {Routes} from './webScreenRoutes';
 
 export const linkingConfig = {
   screens: {
-    [Routes.Projects]: "/one"
+    [Routes.Projects]: "/"
   },
 };
 
-export const baseURL = 'https://turbo-native-demo.glitch.me/';
+export const baseURL = 'http://10.0.2.2:3000/';
 
 export const linking = getLinkingObject(baseURL, linkingConfig);
 
