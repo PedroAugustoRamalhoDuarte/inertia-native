@@ -1,14 +1,22 @@
 import {getLinkingObject} from 'react-native-web-screen';
 
-import {Routes} from './webScreenRoutes';
+export const Routes = {
+  Posts: "Posts",
+  CreatePost: "CreatePost",
+  ShowPost: "ShowPost",
+  EditPost: "EditPost",
+}
 
 export const linkingConfig = {
   screens: {
-    [Routes.Posts]: "/posts"
+    [Routes.Posts]: "*",
+    [Routes.CreatePost]: "posts/new",
+    [Routes.EditPost]: "posts/:id/edit",
+    [Routes.ShowPost]: "posts/:id",
   },
 };
 
-export const baseURL = 'http://10.0.2.2:3000/';
+export const baseURL = 'http://192.168.2.7:3000/';
 
 export const linking = getLinkingObject(baseURL, linkingConfig);
 

@@ -1,25 +1,30 @@
+window.TurboSession = null;
+
+
 (() => {
   const TURBO_LOAD_TIMEOUT = 4000
 
   // Bridge between Turbo JS and native code. Built for Turbo 7
   class TurboNative {
     registerAdapter() {
-      if (window.Turbo) {
-        Turbo.registerAdapter(this)
-        TurboSession.turboIsReady(true)
-      } else {
-        throw new Error("Failed to register the TurboNative adapter")
-      }
+      // if (window.Turbo) {
+      //   Turbo.registerAdapter(this)
+      TurboSession.turboIsReady(true) // If Inertia is ready
+      // } else {
+      //   throw new Error("Failed to register the TurboNative adapter")
+      // }
     }
+
 
     pageLoaded() {
       let restorationIdentifier = ""
 
-      if (window.Turbo) {
-        restorationIdentifier = Turbo.navigator.restorationIdentifier
-      }
+      // TODO: Check how to handle this in inertia
+      // if (window.Turbo) {
+      //   restorationIdentifier = Turbo.navigator.restorationIdentifier
+      // }
 
-      this.afterNextRepaint(function() {
+      this.afterNextRepaint(function () {
         TurboSession.pageLoaded(restorationIdentifier)
       })
     }
@@ -36,7 +41,7 @@
         if (Turbo.navigator.locationWithActionIsSamePage(new URL(location), action)) {
           // Skip the same-page anchor scrolling behavior for visits initiated from the native
           // side. The page content may be stale and we want a fresh request from the network.
-          Turbo.navigator.startVisit(location, restorationIdentifier, { "action": "replace" })
+          Turbo.navigator.startVisit(location, restorationIdentifier, {"action": "replace"})
         } else {
           Turbo.navigator.startVisit(location, restorationIdentifier, options)
         }
@@ -76,7 +81,7 @@
     }
 
     visitRenderedForColdBoot(visitIdentifier) {
-      this.afterNextRepaint(function() {
+      this.afterNextRepaint(function () {
         TurboSession.visitRendered(visitIdentifier)
       })
     }
@@ -134,13 +139,13 @@
     }
 
     visitRendered(visit) {
-      this.afterNextRepaint(function() {
+      this.afterNextRepaint(function () {
         TurboSession.visitRendered(visit.identifier)
       })
     }
 
     visitCompleted(visit) {
-      this.afterNextRepaint(function() {
+      this.afterNextRepaint(function () {
         TurboSession.visitCompleted(visit.identifier, visit.restorationIdentifier)
       })
     }
@@ -164,11 +169,12 @@
       // failures, including cross-origin fetch redirect attempts.
       if (statusCode <= 0) {
         try {
-          const response = await fetch(visit.location, { redirect: "follow" })
+          const response = await fetch(visit.location, {redirect: "follow"})
           if (response.url != null && response.url.origin != visit.location.origin) {
             return response.url
           }
-        } catch {}
+        } catch {
+        }
       }
 
       return null
@@ -178,65 +184,52 @@
       if (document.hidden) {
         callback()
       } else {
-        requestAnimationFrame(function() {
+        requestAnimationFrame(function () {
           requestAnimationFrame(callback)
         })
       }
     }
   }
 
-  // Touch detection, allowing vertically scrollable elements
-  // to scroll properly without triggering pull-to-refresh.
-
-  const elementTouchStart = (event) => {
-    if (!event.target) return
-
-    var element = event.target
-
-    while (element) {
-      const canScroll = element.scrollHeight > element.clientHeight
-      const overflowY = window.getComputedStyle(element).overflowY
-
-      if (canScroll && (overflowY === "scroll" || overflowY === "auto")) {
-        TurboSession.elementTouchStarted(true)
-        break
-      }
-
-      element = element.parentElement
-    }
-
-    if (!element) {
-      TurboSession.elementTouchStarted(false)
-    }
-  }
-
-  const elementTouchEnd = () => {
-    TurboSession.elementTouchEnded()
-  }
-
   // Setup and register adapter
 
   window.turboNative = new TurboNative()
 
-  const setup = function() {
+  const setup = function () {
     window.turboNative.registerAdapter()
     window.turboNative.pageLoaded()
 
     document.removeEventListener("turbo:load", setup)
-
-    document.addEventListener("touchstart", elementTouchStart)
-    document.addEventListener("touchend", elementTouchEnd)
   }
 
   const setupOnLoad = () => {
     document.addEventListener("turbo:load", setup)
 
-    setTimeout(() => {
-      if (!window.Turbo) {
-        TurboSession.turboIsReady(false)
-        window.turboNative.pageLoadFailed()
-      }
-    }, TURBO_LOAD_TIMEOUT)
+    document.addEventListener('inertia:start', (event) => {
+      console.log(event)
+      console.log(`Starting a visit to ${event.detail.visit.url}`)
+    })
+
+    document.addEventListener('inertia:before', (event) => {
+      console.log(event)
+      console.log(`About to make a visit to ${event.detail.visit.url}`)
+    })
+
+    document.addEventListener('inertia:success', (event) => {
+      console.log(event)
+      console.log(`Successfully made a visit to ${event.detail}`)
+    })
+
+    document.addEventListener('inertia:error', (event) => {
+      console.log(`Some error ${event.detail}`)
+    })
+
+    // setTimeout(() => {
+    //   if (!window.Turbo) {
+    //     TurboSession.turboIsReady(false)
+    //     window.turboNative.pageLoadFailed()
+    //   }
+    // }, TURBO_LOAD_TIMEOUT)
   }
 
   if (window.Turbo) {

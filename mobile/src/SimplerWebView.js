@@ -7,7 +7,6 @@ import {
 import RNWenView from "react-native-webview";
 import {baseURL, linkingConfig} from './webScreen';
 
-
 // This webview does not use turbo native
 const SimplerWebView = () => {
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
@@ -15,8 +14,10 @@ const SimplerWebView = () => {
 
   const onVisit = useCallback(
     (e) => {
-      console.log(e)
-      navigateTo(e.url, e.navigationType);
+      if (e.navigationType) {
+        //console.log("navigationType", e);
+        return navigateTo(e.url);
+      }
     },
     [navigateTo],
   );
@@ -24,6 +25,7 @@ const SimplerWebView = () => {
   return (
     <SafeAreaView style={styles.container}>
       <RNWenView
+        pullToRefreshEnabled={true}
         onNavigationStateChange={onVisit}
         style={styles.webview}
         userAgent="Inertia Native"
