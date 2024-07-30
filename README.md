@@ -1,24 +1,24 @@
-# README
+# Inertia + Turbo Native + React Native
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repo will show you how to use inertia with turbo native and react native
 
-Things you may want to cover:
+Most of the guides setup Turbo Native with Turbo and Android or IOS separated, but in the rails world we always try to
+make thing simpler, and let's do it one more time eliminated separated build from IOS and Android and unified with React
+Native.
 
-* Ruby version
+In SwitchDreams stack we use this awesome tool called Inertia and our goal is to integrate with Turbo Native.
 
-* System dependencies
+## Mobile
 
-* Configuration
+For mobile we are using React Native, is a bit of trouble to set up everything correct.
 
-* Database creation
+### Steps
 
-* Database initialization
+- Create a mobile build
 
-* How to run the test suite
+`eas build --profile development --platform android --local`
 
-* Services (job queues, cache servers, search engines, etc.)
+- Submit the mobile build for the simulator (For more info
+  access [expo docs](https://docs.expo.dev/build-reference/apk/#installing-your-build))
 
-* Deployment instructions
-
-* ...
+`adb install <build-name.apk>`
