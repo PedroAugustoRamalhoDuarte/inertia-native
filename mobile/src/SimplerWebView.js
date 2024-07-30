@@ -15,6 +15,7 @@ const SimplerWebView = () => {
 
   const onVisit = useCallback(
     (e) => {
+      console.log(e)
       navigateTo(e.url, e.navigationType);
     },
     [navigateTo],

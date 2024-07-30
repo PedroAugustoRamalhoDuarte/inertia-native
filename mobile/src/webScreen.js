@@ -4,7 +4,7 @@ import {Routes} from './webScreenRoutes';
 
 export const linkingConfig = {
   screens: {
-    [Routes.Projects]: "/"
+    [Routes.Posts]: "/posts"
   },
 };
 
