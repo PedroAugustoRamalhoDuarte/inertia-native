@@ -1,3 +1,4 @@
+import 'expo-dev-client';
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, Text, View} from 'react-native';
 import {NavigationContainer} from "@react-navigation/native";
@@ -29,6 +30,7 @@ export default function App() {
           name="Projects"
           component={WebView}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
 

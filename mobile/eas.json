@@ -2,11 +2,7 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"
