@@ -2,14 +2,10 @@
   const TURBO_LOAD_TIMEOUT = 4000
 
   // Bridge between Turbo JS and native code. Built for Turbo 7
-  // with backwards compatibility for Turbolinks 5
   class TurboNative {
     registerAdapter() {
       if (window.Turbo) {
         Turbo.registerAdapter(this)
-        TurboSession.turboIsReady(true)
-      } else if (window.Turbolinks) {
-        Turbolinks.controller.adapter = this
         TurboSession.turboIsReady(true)
       } else {
         throw new Error("Failed to register the TurboNative adapter")
@@ -21,8 +17,6 @@
 
       if (window.Turbo) {
         restorationIdentifier = Turbo.navigator.restorationIdentifier
-      } else if (window.Turbolinks) {
-        restorationIdentifier = Turbolinks.controller.restorationIdentifier
       }
 
       this.afterNextRepaint(function() {
@@ -45,14 +39,6 @@
           Turbo.navigator.startVisit(location, restorationIdentifier, { "action": "replace" })
         } else {
           Turbo.navigator.startVisit(location, restorationIdentifier, options)
-        }
-      } else if (window.Turbolinks) {
-        if (Turbolinks.controller.startVisitToLocationWithAction) {
-          // Turbolinks 5
-          Turbolinks.controller.startVisitToLocationWithAction(location, action, restorationIdentifier)
-        } else {
-          // Turbolinks 5.3
-          Turbolinks.controller.startVisitToLocation(location, restorationIdentifier, options)
         }
       }
     }
@@ -110,11 +96,6 @@
         // Propose the visit
         TurboSession.visitProposedToLocation(location.toString(), JSON.stringify(options))
       }
-    }
-
-    // Turbolinks 5
-    visitProposedToLocationWithAction(location, action) {
-      this.visitProposedToLocation(location, { action })
     }
 
     visitStarted(visit) {
@@ -242,7 +223,6 @@
     window.turboNative.pageLoaded()
 
     document.removeEventListener("turbo:load", setup)
-    document.removeEventListener("turbolinks:load", setup)
 
     document.addEventListener("touchstart", elementTouchStart)
     document.addEventListener("touchend", elementTouchEnd)
@@ -250,17 +230,16 @@
 
   const setupOnLoad = () => {
     document.addEventListener("turbo:load", setup)
-    document.addEventListener("turbolinks:load", setup)
 
     setTimeout(() => {
-      if (!window.Turbo && !window.Turbolinks) {
+      if (!window.Turbo) {
         TurboSession.turboIsReady(false)
         window.turboNative.pageLoadFailed()
       }
     }, TURBO_LOAD_TIMEOUT)
   }
 
-  if (window.Turbo || window.Turbolinks) {
+  if (window.Turbo) {
     setup()
   } else {
     setupOnLoad()
