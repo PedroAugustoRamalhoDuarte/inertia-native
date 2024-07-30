@@ -212,6 +212,25 @@
     document.addEventListener("turbo:load", setup)
     document.addEventListener("turbolinks:load", setup)
 
+    // Inertia native
+
+    document.addEventListener('inertia:start', (event) => {
+      console.log(`Starting a visit to ${event.detail.visit.url}`)
+    })
+
+    document.addEventListener('inertia:before', (event) => {
+      console.log(`About to make a visit to ${event.detail.visit.url}`)
+    })
+
+    document.addEventListener('inertia:success', (event) => {
+      console.log(`Successfully made a visit to ${event.detail.visit.url}`)
+    })
+
+    document.addEventListener('inertia:error', (event) => {
+      console.log(`Some error ${event.detail.visit.url}`)
+    })
+
+
     setTimeout(() => {
       if (!window.Turbo && !window.Turbolinks) {
         window.turboNative.pageLoadFailed()
