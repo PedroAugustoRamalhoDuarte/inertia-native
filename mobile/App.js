@@ -1,4 +1,3 @@
-import 'expo-dev-client';
 import {
   Text, TouchableHighlight, View
 } from 'react-native';
@@ -33,19 +32,11 @@ export default function App() {
       <Stack.Navigator options={{headerShown: false}}>
         <Stack.Screen
           name={Routes.Posts}
-          component={SimpleWebView}
+          component={SimplerWebView}
         />
         <Stack.Screen
-          name={Routes.EditPost}
-          component={SimpleWebView}
-        />
-        <Stack.Screen
-          name={Routes.CreatePost}
-          component={SimpleWebView}
-        />
-        <Stack.Screen
-          name={Routes.ShowPost}
-          component={SimpleWebView}
+          name={Routes.Fallback}
+          component={SimplerWebView}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,5 +1,5 @@
-import {useCallback} from "react";
-import {ActivityIndicator, SafeAreaView, StyleSheet} from "react-native";
+import {useCallback, useEffect, useRef} from "react";
+import {ActivityIndicator, BackHandler, Platform, SafeAreaView, StyleSheet} from "react-native";
 import {
   useCurrentUrl,
   useWebviewNavigate,
@@ -8,23 +8,44 @@ import RNWenView from "react-native-webview";
 import {baseURL, linkingConfig} from './webScreen';
 
 // This webview does not use turbo native
-const SimplerWebView = () => {
+const SimplerWebView = ({navigation}) => {
+  const webViewRef = useRef(null);
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
   const {navigateTo} = useWebviewNavigate();
 
   const onVisit = useCallback(
     (e) => {
       if (e.navigationType) {
-        //console.log("navigationType", e);
-        return navigateTo(e.url);
+        // if (!e.loading) {
+        //   webViewRef.current.stopLoading();
+        // }
+        return navigateTo(e.url, "NAVIGATE");
       }
     },
-    [navigateTo],
+    [navigation],
   );
 
+  const onAndroidBackPress = () => {
+    if (webViewRef.current) {
+      webViewRef.current.goBack();
+      return true; // prevent default behavior (exit app)
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onAndroidBackPress);
+      };
+    }
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <RNWenView
+        ref={webViewRef}
+        allowsBackForwardNavigationGestures={true}
         pullToRefreshEnabled={true}
         onNavigationStateChange={onVisit}
         style={styles.webview}
