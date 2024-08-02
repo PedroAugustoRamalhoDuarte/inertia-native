@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useRef} from "react";
-import {ActivityIndicator, BackHandler, Platform, SafeAreaView, StyleSheet} from "react-native";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {ActivityIndicator, BackHandler, Platform, SafeAreaView, StyleSheet, Text} from "react-native";
 import {
   useCurrentUrl,
   useWebviewNavigate,
@@ -8,14 +8,18 @@ import RNWenView from "react-native-webview";
 import {baseURL, linkingConfig} from './webScreen';
 
 // This webview does not use turbo native
-const SimplerWebView = ({navigation}) => {
+const InertiaWebView = ({navigation}) => {
   const webViewRef = useRef(null);
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
+
   const {navigateTo} = useWebviewNavigate();
   const state = navigation.getState();
   const currentRoute = state.routes[state.index];
+  console.log(currentRoute.name, currentUrl)
+  const alreadyRefreshed = useState(false);
 
-  const onVisit = useCallback(
+  // The first view still redirects
+  const handleShouldVisit = useCallback(
     (e) => {
       let thisUrl
       if (currentRoute.params) {
@@ -23,20 +27,28 @@ const SimplerWebView = ({navigation}) => {
       } else {
         thisUrl = "";
       }
-      if (thisUrl !== e.url) {
-        console.log(currentUrl)
-        console.log(currentRoute)
-        console.log(e)
 
-        if (!e.loading) {
-          webViewRef.current.stopLoading();
-        }
-      }
+      console.log(currentRoute.name, e.loading, e.url, currentUrl)
 
-      return navigateTo(e.url, "NAVIGATE");
+      console.log(e)
+      return currentUrl === e.url;
     },
     [navigation],
   );
+
+
+  const handleOnMessage = (event) => {
+    const data = JSON.parse(event.nativeEvent.data);
+    console.log(data);
+
+    navigateTo(data.visit.url);
+  }
+
+  const inertiaJavascript = `
+  document.addEventListener('inertia:start', (event) => {
+           window.ReactNativeWebView.postMessage(JSON.stringify(event.detail));
+});
+  `
 
   const onAndroidBackPress = () => {
     if (webViewRef.current) {
@@ -56,26 +68,26 @@ const SimplerWebView = ({navigation}) => {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
+      <Text>{currentRoute.name}</Text>
       <RNWenView
         ref={webViewRef}
+        onShouldStartLoadWithRequest={handleShouldVisit}
         allowsBackForwardNavigationGestures={true}
         pullToRefreshEnabled={true}
-        onNavigationStateChange={onVisit}
+        onMessage={handleOnMessage}
         style={styles.webview}
         userAgent="Inertia Native"
+        injectedJavaScript={inertiaJavascript}
         renderLoading={() => <ActivityIndicator/>}
         source={{
           uri: currentUrl,
-          headers: {
-            "User-Agent": "Inertia Native",
-          },
         }}
       />
     </SafeAreaView>
   );
 };
 
-export default SimplerWebView;
+export default InertiaWebView;
 
 const styles = StyleSheet.create({
   container: {

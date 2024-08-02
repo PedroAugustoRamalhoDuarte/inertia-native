@@ -5,6 +5,7 @@ import {NavigationContainer, useNavigation} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {linking, Routes} from "./src/webScreen";
 import SimplerWebView from "./src/SimplerWebView";
+import InertiaWebview from "./src/InertiaWebview";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,12 +33,16 @@ export default function App() {
       <Stack.Navigator options={{headerShown: false}}>
         <Stack.Screen
           name={Routes.Posts}
-          component={SimplerWebView}
+          component={InertiaWebview}
         />
         <Stack.Screen
-          name={Routes.Fallback}
-          component={SimplerWebView}
+          name={Routes.CreatePost}
+          component={InertiaWebview}
         />
+        {/*<Stack.Screen*/}
+        {/*  name={Routes.Fallback}*/}
+        {/*  component={SimplerWebView}*/}
+        {/*/>*/}
       </Stack.Navigator>
     </NavigationContainer>
 
