@@ -11,40 +11,44 @@ import {baseURL, linkingConfig} from './webScreen';
 const InertiaWebView = ({navigation}) => {
   const webViewRef = useRef(null);
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
-
   const {navigateTo} = useWebviewNavigate();
   const state = navigation.getState();
   const currentRoute = state.routes[state.index];
-  console.log(currentRoute.name, currentUrl)
-  const alreadyRefreshed = useState(false);
-
-  // The first view still redirects
-  const handleShouldVisit = useCallback(
-    (e) => {
-      let thisUrl
-      if (currentRoute.params) {
-        thisUrl = currentRoute.params.baseURL + currentRoute.params.url;
-      } else {
-        thisUrl = "";
-      }
-
-      console.log(currentRoute.name, e.loading, e.url, currentUrl)
-
-      console.log(e)
-      return currentUrl === e.url;
-    },
-    [navigation],
-  );
 
 
   const handleOnMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    console.log(data);
 
-    navigateTo(data.visit.url);
+    if (data.method === "historyChange") {
+      webViewRef.current.stopLoading();
+    } else {
+      navigateTo(data.visit.url);
+    }
   }
 
-  const inertiaJavascript = `
+  // fixes issue with pushHistory https://github.com/react-native-webview/react-native-webview/issues/1197
+  const historyAPIShim = `
+(function() {
+    function wrap(fn) {
+      return function wrapper() {
+        var res = fn.apply(this, arguments);
+        window.ReactNativeWebView.postMessage(
+          '{"method": "historyChange"}'
+        );
+        return res;
+      };
+    }
+    history.pushState = wrap(history.pushState);
+    history.replaceState = wrap(history.replaceState);
+    window.addEventListener("popstate", function() {
+      window.ReactNativeWebView.postMessage(
+        '{"method": "historyChange"}'
+      );
+    });
+  })();
+`;
+
+  const inertiaJavascript = `  
   document.addEventListener('inertia:start', (event) => {
            window.ReactNativeWebView.postMessage(JSON.stringify(event.detail));
 });
@@ -66,18 +70,19 @@ const InertiaWebView = ({navigation}) => {
       };
     }
   }, []);
+
+
   return (
     <SafeAreaView style={styles.container}>
       <Text>{currentRoute.name}</Text>
       <RNWenView
         ref={webViewRef}
-        onShouldStartLoadWithRequest={handleShouldVisit}
         allowsBackForwardNavigationGestures={true}
         pullToRefreshEnabled={true}
         onMessage={handleOnMessage}
         style={styles.webview}
         userAgent="Inertia Native"
-        injectedJavaScript={inertiaJavascript}
+        injectedJavaScript={inertiaJavascript + historyAPIShim}
         renderLoading={() => <ActivityIndicator/>}
         source={{
           uri: currentUrl,
