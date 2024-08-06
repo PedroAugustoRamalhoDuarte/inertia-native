@@ -13,13 +13,19 @@ const InertiaWebView = () => {
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
   const {navigateTo} = useWebviewNavigate();
 
+
   const handleOnMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-
+    console.log(data)
     if (data.method === "historyChange") {
       webViewRef.current.stopLoading();
     } else {
       navigateTo(data.visit.url);
+
+      if (data.method !== "get") {
+        // TODO: Automatically refresh the page when the method is not get
+        // Maybe https://reactnavigation.org/docs/navigation-events
+      }
     }
   }
 
