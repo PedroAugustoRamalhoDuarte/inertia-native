@@ -13,7 +13,7 @@ export const linkingConfig = {
     [Routes.Posts]: "/posts",
     [Routes.CreatePost]: "posts/new",
     // [Routes.EditPost]: "posts/:id/edit",
-    // [Routes.ShowPost]: "posts/:id",
+    [Routes.ShowPost]: "posts/:id",
     [Routes.Fallback]: "*",
   },
 };

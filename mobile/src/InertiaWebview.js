@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useRef, useState} from "react";
-import {ActivityIndicator, BackHandler, Platform, SafeAreaView, StyleSheet, Text} from "react-native";
+import {useEffect, useRef} from "react";
+import {ActivityIndicator, BackHandler, Platform, SafeAreaView, StyleSheet} from "react-native";
 import {
   useCurrentUrl,
   useWebviewNavigate,
@@ -8,13 +8,10 @@ import RNWenView from "react-native-webview";
 import {baseURL, linkingConfig} from './webScreen';
 
 // This webview does not use turbo native
-const InertiaWebView = ({navigation}) => {
+const InertiaWebView = () => {
   const webViewRef = useRef(null);
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
   const {navigateTo} = useWebviewNavigate();
-  const state = navigation.getState();
-  const currentRoute = state.routes[state.index];
-
 
   const handleOnMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
@@ -74,7 +71,6 @@ const InertiaWebView = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{currentRoute.name}</Text>
       <RNWenView
         ref={webViewRef}
         allowsBackForwardNavigationGestures={true}

@@ -23,11 +23,6 @@ function HomeScreen() {
 
 
 export default function App() {
-  const SimpleWebView = () => {
-    return (
-      <SimplerWebView/>
-    );
-  }
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator options={{headerShown: false}}>
@@ -37,6 +32,10 @@ export default function App() {
         />
         <Stack.Screen
           name={Routes.CreatePost}
+          component={InertiaWebview}
+        />
+        <Stack.Screen
+          name={Routes.ShowPost}
           component={InertiaWebview}
         />
         {/*<Stack.Screen*/}
