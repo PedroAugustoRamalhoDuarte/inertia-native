@@ -11,9 +11,9 @@ export const Routes = {
 export const linkingConfig = {
   screens: {
     [Routes.Posts]: "/posts",
-    // [Routes.CreatePost]: "posts/new",
-    // [Routes.EditPost]: "posts/:id/edit",
-    // [Routes.ShowPost]: "posts/:id",
+    [Routes.CreatePost]: "posts/new",
+    [Routes.EditPost]: "posts/:id/edit",
+    [Routes.ShowPost]: "posts/:id",
     [Routes.Fallback]: "*",
   },
 };
