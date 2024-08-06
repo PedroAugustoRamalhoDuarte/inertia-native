@@ -45,6 +45,7 @@ const InertiaWebView = () => {
   })();
 `;
 
+  // Handle inertia navigation
   const inertiaJavascript = `  
   document.addEventListener('inertia:start', (event) => {
            window.ReactNativeWebView.postMessage(JSON.stringify(event.detail));
@@ -73,6 +74,8 @@ const InertiaWebView = () => {
     <SafeAreaView style={styles.container}>
       <RNWenView
         ref={webViewRef}
+        sharedCookiesEnabled={true} // This allowed to cache assets
+        cacheEnabled
         allowsBackForwardNavigationGestures={true}
         pullToRefreshEnabled={true}
         onMessage={handleOnMessage}

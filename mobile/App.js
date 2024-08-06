@@ -4,8 +4,7 @@ import {
 import {NavigationContainer, useNavigation} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {linking, Routes} from "./src/webScreen";
-import SimplerWebView from "./src/SimplerWebView";
-import InertiaWebview from "./src/InertiaWebview";
+import InertiaWebview from "./src/InertiaWebView";
 
 const Stack = createNativeStackNavigator();
 
