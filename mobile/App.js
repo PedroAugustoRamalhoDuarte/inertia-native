@@ -38,6 +38,10 @@ export default function App() {
           name={Routes.ShowPost}
           component={InertiaWebview}
         />
+        <Stack.Screen
+          name={Routes.EditPost}
+          component={InertiaWebview}
+        />
         {/*<Stack.Screen*/}
         {/*  name={Routes.Fallback}*/}
         {/*  component={SimplerWebView}*/}
