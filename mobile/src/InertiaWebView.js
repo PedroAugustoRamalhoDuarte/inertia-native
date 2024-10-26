@@ -5,7 +5,7 @@ import {
   useWebviewNavigate,
 } from "react-native-web-screen";
 import RNWenView from "react-native-webview";
-import {useIsFocused, useNavigation, useRoute, getStateFromPath} from "@react-navigation/core";
+import {useNavigation, useRoute, getStateFromPath} from "@react-navigation/core";
 import {baseURL, linkingConfig} from './webScreen';
 import extractPathFromURL from "@react-navigation/native/src/extractPathFromURL";
 import * as React from "react";
@@ -16,7 +16,6 @@ const InertiaWebView = () => {
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
   const linking = React.useContext(LinkingContext);
   const {navigateTo} = useWebviewNavigate();
-  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -32,13 +31,6 @@ const InertiaWebView = () => {
       : getStateFromPath(path, options?.config);
     return state;
   }
-
-  useEffect(() => {
-    // Se a tela receber o parâmetro fresh via goBack, recarrega a página
-    if (isFocused && route.params?.fresh) {
-      webViewRef.current?.reload();
-    }
-  }, [isFocused, route.params?.fresh]);
 
   const handleOnMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
@@ -120,7 +112,6 @@ const InertiaWebView = () => {
         allowsBackForwardNavigationGestures={true}
         pullToRefreshEnabled={true}
         onMessage={handleOnMessage}
-        debuggingEnabled={true}
         setSupportMultipleWindows={false}
         style={styles.webview}
         onShouldStartLoadWithRequest={(request) => {
