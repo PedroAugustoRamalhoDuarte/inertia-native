@@ -21,7 +21,7 @@ const InertiaWebView = () => {
   const route = useRoute();
 
   const getStateFromUrl = (to) => {
-    const { options } = linking;
+    const {options} = linking;
 
     let path = to;
     if (options?.prefixes && to.match(/^https?:\/\//)) {
@@ -33,26 +33,33 @@ const InertiaWebView = () => {
     return state;
   }
 
+  useEffect(() => {
+    // Se a tela receber o parâmetro fresh via goBack, recarrega a página
+    if (isFocused && route.params?.fresh) {
+      webViewRef.current?.reload();
+    }
+  }, [isFocused, route.params?.fresh]);
 
   const handleOnMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    webViewRef.current.stopLoading();
+    webViewRef.current.stopLoading(); // Does not allow to load the page
     if (data.method === "historyChange") {
-      webViewRef.current.stopLoading();
+      // Fixes this bug with webview https://github.com/react-native-webview/react-native-webview/issues/973#issuecomment-952786718
+      // We do twice the request but is what we can do for now
+      if (event.nativeEvent.canGoBack) {
+        webViewRef.current.goBack();
+      }
     } else {
+      // This handle inertia requests
       const routes = navigation.getState()?.routes;
       const lastRoute = routes[routes.length - 2];
-      if (lastRoute && lastRoute.name === "Posts") {
-        webViewRef.current.stopLoading();
-        console.log("Go back to posts", route.name)
-        return navigation.goBack();
-      }
-      console.log("Navigate", isFocused, data.visit.url, route.name)
-      navigateTo(data.visit.url);
-
-      if (data.method !== "get") {
-        // TODO: Automatically refresh the page when the method is not get
-        // Maybe https://reactnavigation.org/docs/navigation-events
+      const state = getStateFromUrl(data.visit.url);
+      // TODO: Automatically refresh the page when the method is not get (data.visit.method.toLowerCase() !== "get")
+      // Maybe https://reactnavigation.org/docs/navigation-events
+      if (lastRoute && lastRoute.name === state.routes[0].name) {
+        navigation.goBack();
+      } else {
+        navigateTo(data.visit.url);
       }
     }
   }
@@ -83,7 +90,7 @@ const InertiaWebView = () => {
   const inertiaJavascript = `  
   document.addEventListener('inertia:start', (event) => {
            window.ReactNativeWebView.postMessage(JSON.stringify(event.detail));
-});
+  });
   `
 
   const onAndroidBackPress = () => {
@@ -113,20 +120,12 @@ const InertiaWebView = () => {
         allowsBackForwardNavigationGestures={true}
         pullToRefreshEnabled={true}
         onMessage={handleOnMessage}
+        debuggingEnabled={true}
+        setSupportMultipleWindows={false}
         style={styles.webview}
         onShouldStartLoadWithRequest={(request) => {
           const state = getStateFromUrl(request.url);
-          console.log("onShouldStartLoadWithRequest", request.url, route.name, route.name === state.routes[0].name);
           return route.name === state.routes[0].name;
-        }}
-        // This function is called a lot of times because history change of Inertia
-        // For navigation purposes, we need to cancel this navigation to the old page does not redirect to new one
-        onNavigationStateChange={() => {
-          // Todo still a little bug sometimes the still making request
-          return false;
-        }}
-        onLoadStart={({nativeEvent}) => {
-          console.log("onLoadStart", nativeEvent, route.name);
         }}
         userAgent="Inertia Native"
         injectedJavaScript={inertiaJavascript + historyAPIShim}
