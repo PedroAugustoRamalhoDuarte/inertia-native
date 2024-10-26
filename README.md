@@ -1,5 +1,8 @@
 # Inertia + React Native
 
+> This repo is a work in progress to make Inertia play nice with React Native. Something like Hotwired Native for
+> Inertia
+
 This repo will show you how to use Inertia with React Native.
 
 In SwitchDreams stack we use this awesome tool called `Inertia` and our goal is to integrate our web application into a
@@ -31,7 +34,8 @@ For native mobile we are using React Native with this following packages:
 - [React Native WebView]
 - [Expo]
 
-The principal idea is to customize the react-native-webview to listen to Inertia router events and render one Webview for each
+The principal idea is to customize the react-native-webview to listen to Inertia router events and render one Webview
+for each
 principal Screen of you Website and one Webview to Fallback.
 
 Also we can mix between Native Screen and Web Screens.
