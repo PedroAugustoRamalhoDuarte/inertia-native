@@ -301,22 +301,22 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.21.5.tgz#acad351d582d157bb145535db2a6ff53dd514b5c"
   integrity sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==
 
-"@inertiajs/core@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@inertiajs/core/-/core-1.2.0.tgz#3cdc88bc17c20eefdae99a778eac7be1ead9b14b"
-  integrity sha512-6U0gqCPbGGGMcLoDm+ckKipc5gptZMmfVFfPGdO7vlO7yipWf1RD+TKkcZGJklFvfgFMKwK2VPw8GAv1OctuQA==
+"@inertiajs/core@2.0.0-beta.2":
+  version "2.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@inertiajs/core/-/core-2.0.0-beta.2.tgz#27b06ab008aba520277736bf2a8a76654f032ed9"
+  integrity sha512-2fi1YAncmkQAGko+miQanobF5anSO9lBK8i6Fgl0YKDjLQJg7+Sdr/yQIDwJtvFYgOgDbAhIcAawn9usc0/9bQ==
   dependencies:
     axios "^1.6.0"
     deepmerge "^4.0.0"
     nprogress "^0.2.0"
     qs "^6.9.0"
 
-"@inertiajs/react@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@inertiajs/react/-/react-1.2.0.tgz#73af92a1fab7aa10968ee818140f46bb3061d904"
-  integrity sha512-Q3wTaQJdoUbUB8YIGeQ0y2Tf/k8dNtz9Nu2dYr1pbYUBv++6d45iC/CFB/lIpqVvvUw8XuIai2bdsUcRSIbPCQ==
+"@inertiajs/react@^2.0.0-beta.2":
+  version "2.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@inertiajs/react/-/react-2.0.0-beta.2.tgz#8dffd30e82d306f307b2029d496a188fd226e502"
+  integrity sha512-Zm3hWYvA0GNEHaqt3CPUBNz5NFQnxopOiAdYZ4HKrR/upsptMNcJ+JBQ7r0Wvmk3xaq9cbO3JiH7RvXUDxItxQ==
   dependencies:
-    "@inertiajs/core" "1.2.0"
+    "@inertiajs/core" "2.0.0-beta.2"
     lodash.isequal "^4.5.0"
 
 "@isaacs/cliui@^8.0.2":
