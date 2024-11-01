@@ -1,6 +1,3 @@
-window.TurboSession = null;
-
-
 (() => {
   const TURBO_LOAD_TIMEOUT = 4000
 
@@ -203,11 +200,13 @@ window.TurboSession = null;
   }
 
   const setupOnLoad = () => {
-    document.addEventListener("turbo:load", setup)
+    TurboSession.turboIsReady(true);
+    //document.addEventListener("turbo:load", setup)
 
     document.addEventListener('inertia:start', (event) => {
       console.log(event)
       console.log(`Starting a visit to ${event.detail.visit.url}`)
+      TurboSession.visitRequestStarted(event.detail.visit.url)
     })
 
     document.addEventListener('inertia:before', (event) => {

@@ -1,3 +1,3 @@
 import "./tailwind.css"
 
-import "../vendor/turboNativeInertia.js"
+//import "../vendor/turboNativeInertia.js"
