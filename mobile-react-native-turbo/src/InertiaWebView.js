@@ -6,6 +6,7 @@ import {useCurrentUrl, useWebviewNavigate} from 'react-native-web-screen';
 
 
 import {baseURL, linkingConfig} from './webScreen';
+import script from "./bridge/InertiaBridge";
 
 const WebView = ({navigation, ...props}) => {
   const {navigateTo} = useWebviewNavigate();
@@ -26,35 +27,6 @@ const WebView = ({navigation, ...props}) => {
 
   useEffect(() => {
     if (visitableViewRef.current) {
-      const script = `
-        TurboSession.turboIsReady(true)
-        
-        // visitProposedToLocation
-        document.addEventListener('inertia:before', (event) => {
-          console.log("BEFORE")
-          // TODO: Handle Scroll
-          // TODO: Handle same page
-          // TODO: Make JSON working
-          TurboSession.visitProposedToLocation(event.detail.visit.url.toString(), {})
-        });
-        
-        // visitRequestStarted
-        document.addEventListener('inertia:start', (event) => {
-          console.log("TurboSession - Start")
-          TurboSession.visitRequestStarted(2)
-        });
-        
-        // visitRequestCompleted
-        document.addEventListener('inertia:finish', (event) => {
-          console.log("TurboSession - Finish")
-          TurboSession.visitRequestFinished(2)
-        })
-        
-        // document.addEventListener('inertia:error', (event) => {
-        //   TurboSession.visitRequestFinished(2)
-        //    console.log(event)
-        // })
-      `;
       visitableViewRef.current.injectJavaScript(script);
     }
   }, [visitableViewRef]);
