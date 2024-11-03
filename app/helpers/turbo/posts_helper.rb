@@ -1,0 +1,2 @@
+module Turbo::PostsHelper
+end

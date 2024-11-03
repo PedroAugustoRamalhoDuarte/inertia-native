@@ -1,21 +1,16 @@
-import React, {useCallback, useEffect, useImperativeHandle} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   VisitableView,
 } from 'react-native-turbo';
 import {useCurrentUrl, useWebviewNavigate} from 'react-native-web-screen';
 
-//import Form from './Strada/Form';
-//import {useSessionHandle} from './useSessionHandle';
-import {baseURL, linkingConfig} from './webScreen';
-import {dispatchCommand} from "react-native-turbo/src/RNVisitableView";
 
-//const stradaComponents = [Form];
+import {baseURL, linkingConfig} from './webScreen';
 
 const WebView = ({navigation, ...props}) => {
   const {navigateTo} = useWebviewNavigate();
   const visitableViewRef = React.useRef(null);
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
-  //const sessionHandle = useSessionHandle();
 
   console.log('currentUrl:', currentUrl);
 
@@ -23,7 +18,7 @@ const WebView = ({navigation, ...props}) => {
   const onVisitProposal = useCallback(
     ({action: actionType, url}) => {
       console.log("onVisitProposal")
-      navigateTo(url, actionType)
+      return navigateTo(url, actionType)
     },
     [navigation]
   );
@@ -34,15 +29,31 @@ const WebView = ({navigation, ...props}) => {
       const script = `
         TurboSession.turboIsReady(true)
         
+        // visitProposedToLocation
+        document.addEventListener('inertia:before', (event) => {
+          console.log("BEFORE")
+          // TODO: Handle Scroll
+          // TODO: Handle same page
+          // TODO: Make JSON working
+          TurboSession.visitProposedToLocation(event.detail.visit.url.toString(), {})
+        });
+        
+        // visitRequestStarted
         document.addEventListener('inertia:start', (event) => {
-          console.log("TurboSession - VISIT")
+          console.log("TurboSession - Start")
           TurboSession.visitRequestStarted(2)
         });
         
-        document.addEventListener('inertia:success', (event) => {
+        // visitRequestCompleted
+        document.addEventListener('inertia:finish', (event) => {
+          console.log("TurboSession - Finish")
           TurboSession.visitRequestFinished(2)
-           console.log(event)
         })
+        
+        // document.addEventListener('inertia:error', (event) => {
+        //   TurboSession.visitRequestFinished(2)
+        //    console.log(event)
+        // })
       `;
       visitableViewRef.current.injectJavaScript(script);
     }
@@ -60,8 +71,6 @@ const WebView = ({navigation, ...props}) => {
       url={currentUrl}
       applicationNameForUserAgent="Turbo Native"
       webViewDebuggingEnabled={true}
-      //stradaComponents={stradaComponents}
-
       onVisitProposal={onVisitProposal}
       onLoad={onLoad}
     />

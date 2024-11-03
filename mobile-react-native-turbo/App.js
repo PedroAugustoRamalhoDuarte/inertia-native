@@ -2,6 +2,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {linking, Routes} from "./src/webScreen";
 import InertiaWebview from "./src/InertiaWebView";
+import TurboWebView from "./src/TurboWebView";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,10 @@ export default function App() {
         <Stack.Screen
           name={Routes.EditPost}
           component={InertiaWebview}
+        />
+        <Stack.Screen
+          name={Routes.Fallback}
+          component={TurboWebView}
         />
       </Stack.Navigator>
     </NavigationContainer>

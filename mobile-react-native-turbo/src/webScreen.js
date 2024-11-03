@@ -10,10 +10,20 @@ export const Routes = {
 
 export const linkingConfig = {
   screens: {
-    [Routes.Posts]: "/posts",
+    [Routes.Posts]: "posts",
     [Routes.CreatePost]: "posts/new",
     [Routes.EditPost]: "posts/:id/edit",
     [Routes.ShowPost]: "posts/:id",
+    [Routes.Fallback]: "*",
+  },
+};
+
+export const linkingTurboConfig = {
+  screens: {
+    [Routes.Posts]: "turbo/posts",
+    [Routes.CreatePost]: "turbo/posts/new",
+    [Routes.EditPost]: "turbo/posts/:id/edit",
+    [Routes.ShowPost]: "turbo/posts/:id",
     [Routes.Fallback]: "*",
   },
 };

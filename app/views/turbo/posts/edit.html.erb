@@ -1,0 +1,12 @@
+<% content_for :title, "Editing post" %>
+
+<h1>Editing post</h1>
+
+<%= render "form", turbo_post: @turbo_post %>
+
+<br>
+
+<div>
+  <%= link_to "Show this post", @turbo_post %> |
+  <%= link_to "Back to posts", turbo_posts_path %>
+</div>
